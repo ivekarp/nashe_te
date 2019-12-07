@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from termcolor import colored
 from sys import exit
-from logo import print_logo
+from logo import print_logo, print_help, print_special
 
 #Variables
 radio_url = 'http://nashe1.hostingradio.ru:80/nashe-128.mp3'
@@ -27,48 +27,6 @@ media = instance.media_new(radio_url)
 player.set_media(media)
 
 #Functions
-def print_help():
-	info = '''
-		_  _ ____ _    ___  
-		|__| |___ |    |__] 
-		|  | |___ |___ |    
-		'''
-	help = '''
-		help),h),?) Помощь
-		special) Дополнительные команды
-		1) Включить радио
-		2) Выключить радио
-		3) Кто поёт?
-		4) Новости
-		5) Изменить громкость
-		6) О программе
-		7) Выйти из программы
-		'''	
-	print(colored(info,'grey','on_white',attrs=['bold']))
-	print(help)
-
-def print_special():
-	info = '''
-						____ ___  ____ ____ _ ____ _    
-						[__  |__] |___ |    | |__| |    
-						___] |    |___ |___ | |  | |___ 
-                                
-
-	'''
-	special = '''
-~~~~~~~~Специальные команды~~~~~~~~
-			clear), cls) Очистить терминал
-			exit) , quit) Выйти из программы 
-			news) Новости 
-			who) Кто поёт?
-			volume) Изменить громкость
-			about) О программе
-		
-		'''
-
-	print(colored(info,'green','on_grey',attrs=['bold']))
-	print(special)
-
 def play(player):
 	#clear()
 	player.play()
@@ -113,6 +71,10 @@ def choosing():
 			volume_change(player)
 		elif str(choose) == 'about':
 			about()
+		elif str(choose) == 'play':
+			play(player)
+		elif str(choose) == 'stop':
+			stop(player)
 		#------------------
 		elif str(choose) == '2':
 			#stop radio
@@ -138,7 +100,7 @@ def choosing():
 
 def who_sings():
 	#singer and name of song
-	singer_url = 'https://metanashe.hostingradio.ru/current.json'
+	singer_url = 'http://metanashe.hostingradio.ru/current.json'
 	response = requests.get(singer_url)
 	data = json.loads(response.text)
 	try:
@@ -156,14 +118,13 @@ def clear():
 def show_news():
 	print(colored('Новости с nashe.ru :','white','on_red',attrs=['bold']))
 	url = 'https://www.nashe.ru/news/'
-	news_list = []
 	html = requests.get(url).text
 	soup = bs(html,'lxml')
-	news = soup.find_all('div',{'class':'b__item b__item_with_overlay'})
+	news = soup.find_all('a',{'class':'news__item'})
 	for n in news:
-		news_title = n.find('div',{'class':'post__title'})
-		news_link = n.find('a',{'class':'post'})
-		print(colored(news_title.text,'green','on_white',attrs=['bold']))
+		news_title = n.find('span',{'class':'news__name'})
+		news_link = n
+		print(colored(news_title.text,'grey','on_white',attrs=['bold']))
 		print(colored(news_link.get('href'),'white','on_green',attrs=['bold']))
 
 def volume_change(player):
