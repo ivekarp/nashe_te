@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #! /usr/bin/env python
 
 import vlc
@@ -39,7 +40,7 @@ def stop(player):
 
 def choosing():
 	while True:
-		choose = input('Выберите действие: ')
+		choose = raw_input('Выберите действие: ')
 		if str(choose) == '1':
 			#play radio
 			play(player)
@@ -106,9 +107,8 @@ def who_sings():
 	try:
 		singer = data["artist"]
 		song = data["title"]
-		singer_and_song = str(singer) + ' - ' + str(song)
 		print(colored("В эфире: ",'green'))
-		print(colored(singer_and_song,'white','on_green',attrs=['bold']))
+		print(colored(u'{} - {}','white','on_green',attrs=['bold']).format(singer,song))
 	except KeyError:
 		pass
 
@@ -132,7 +132,7 @@ def volume_change(player):
 		volume = input('Введите значение громкости (0-100): ')
 		if int(volume)>=0 and int(volume)<=100:
 			player.audio_set_volume(int(volume))
-			print('Установлена громкость: '+str(int(volume)))
+			print(u'Установлена громкость: {}'.format(volume))
 		else:
 			print('Введите значение в диапазоне 0-100 ')
 		if int(volume) == 0:
