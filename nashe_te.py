@@ -40,7 +40,7 @@ def stop(player):
 
 def choosing():
 	while True:
-		choose = raw_input('Выберите действие: ')
+		choose = input('Выберите действие: ')
 		if str(choose) == '1':
 			#play radio
 			play(player)
